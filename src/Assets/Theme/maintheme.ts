@@ -1,4 +1,4 @@
-const maintheme = {
+const Maintheme = {
     colors: {
       background: '#FEFCFA', // Subtle peachy background
       cardBackground: '#FFFFFF', // Clean white for cards
@@ -10,6 +10,7 @@ const maintheme = {
       shadow: '#D3D3D3', // Light shadow for neomorphic effect
       info: '#2196F3', // Blue for informational text
       highlight: '#FFD700', // Gold for special highlights
+      headingcolor: "#FC8019"
     },
     fonts: {
       heading: 'Poppins-SemiBold', // Rounded, friendly font
@@ -132,5 +133,5 @@ const maintheme = {
     },
   };
   
-  export default maintheme;
+  export default Maintheme;
   
