@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Button,Animated,TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../Navigation/Routes';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -11,6 +11,26 @@ import InputField from '../Components/InputField';
 type SignUpPageNavigationProp = StackNavigationProp<RootStackParamList, 'Signuppage'>;
 
 const Signuppage = () => {
+  const [scaleValue] = useState(new Animated.Value(1)); // Initial opacity for animation
+
+  // Animation when button is pressed
+  const handleButtonPressIn = () => {
+    Animated.spring(scaleValue, {
+      toValue: 0.95, // Slightly reduce the size for a subtle effect
+      friction: 4, // Control the bounce (a smoother effect)
+      tension: 40, // Control the speed of the animation
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleButtonPressOut = () => {
+    Animated.spring(scaleValue, {
+      toValue: 1, // Restore to original size
+      friction: 4,
+      tension: 40,
+      useNativeDriver: true,
+    }).start();
+  };
   const navigation = useNavigation<SignUpPageNavigationProp>();
 
   return (
@@ -20,8 +40,8 @@ const Signuppage = () => {
 
       <Formik
         initialValues={{ email: '', name: '', password: '' }}
-        onSubmit={(values) => console.log(values)}
-        validationSchema={signupValidationSchema}
+        onSubmit={(values) => {console.log("pressed");console.log(values)}}
+       validationSchema={signupValidationSchema}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
           <View>
@@ -57,9 +77,16 @@ const Signuppage = () => {
             {touched.password && errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
             {/* Submit Button */}
-            <Button onPress={()=>handleSubmit
-             
-            } title="Submit" />
+            <Animated.View style={[styles.buttonContainer, { opacity: scaleValue }]}>
+              <TouchableOpacity
+                style={styles.button}
+                onPressIn={handleButtonPressIn} // Press in (animation)
+                onPressOut={handleButtonPressOut} // Press out (reset animation)
+                onPress={handleSubmit as ()=> void}
+              >
+                <Text style={styles.buttonText}>Sign Up</Text>
+              </TouchableOpacity>
+            </Animated.View>
           </View>
         )}
       </Formik>
@@ -87,13 +114,33 @@ const styles = StyleSheet.create({
     fontSize: Maintheme.fontSizes.medium,
     textAlign: 'center',
     color: Maintheme.colors.textSecondary,
-    marginVertical: 10,
+    marginBottom: 30,
   },
   errorText: {
     fontSize: 12,
     color: 'red',
     marginBottom: 10,
     marginLeft: 10,
+  },
+  buttonContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  button: {
+    backgroundColor: 'rgb(246, 114, 61)', // Use the same color you want
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 30,
+    width: '70%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3, // Shadow for Android
+    marginTop: 15,
+  },
+  buttonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

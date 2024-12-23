@@ -2,7 +2,7 @@ const Maintheme = {
     colors: {
       background: '#FEFCFA', // Subtle peachy background
       cardBackground: '#FFFFFF', // Clean white for cards
-      textPrimary: '#2E2E2E', // Rich black for headlines
+      textPrimary: 'rgb(0, 0, 0)', // Rich black for headlines
       textSecondary: '#6D6D6D', // Subtle gray for body text
       accent: '#FF6347', // Bright red-orange for highlights
       success: '#4CAF50', // Green for positive actions
@@ -10,7 +10,8 @@ const Maintheme = {
       shadow: '#D3D3D3', // Light shadow for neomorphic effect
       info: '#2196F3', // Blue for informational text
       highlight: '#FFD700', // Gold for special highlights
-      headingcolor: "#FC8019"
+      headingcolor: "#FC8019",
+      darkorage: 'rgb(246, 114, 61)'
     },
     fonts: {
       heading: 'Poppins-SemiBold', // Rounded, friendly font
@@ -47,11 +48,11 @@ const Maintheme = {
     },
     shadows: {
       light: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 5,
+        shadowColor: 'rgba(255, 148, 105, 0.65)',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.001,
+        shadowRadius: 15,
+        elevation: 4,
       },
       medium: {
         shadowColor: '#888',
