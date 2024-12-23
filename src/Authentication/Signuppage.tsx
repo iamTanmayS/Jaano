@@ -57,7 +57,9 @@ const Signuppage = () => {
             {touched.password && errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
             {/* Submit Button */}
-            <Button onPress={()=>handleSubmit} title="Submit" />
+            <Button onPress={()=>handleSubmit
+             
+            } title="Submit" />
           </View>
         )}
       </Formik>
