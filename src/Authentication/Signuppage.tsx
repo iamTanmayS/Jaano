@@ -8,6 +8,8 @@ import signupValidationSchema from './SignupValidationschema';
 import Maintheme from '../Assets/Theme/maintheme';
 import InputField from '../Components/InputField';
 import  auth  from '@react-native-firebase/auth';
+import { signIn } from './loginWithGoogle';
+
 
 
 type SignUpPageNavigationProp = StackNavigationProp<RootStackParamList, 'Signuppage'>;
@@ -106,7 +108,7 @@ const Signuppage = () => {
         )}
       </Formik>
 
-      <Button title="Login" onPress={() => console.log('hell')} />
+      <Button title="Sign In With Google" onPress={() => signIn()} />
     </View>
   );
 };

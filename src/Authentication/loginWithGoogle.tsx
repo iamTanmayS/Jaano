@@ -1,13 +1,12 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect } from 'react'
 import { GoogleSignin, statusCodes, isSuccessResponse, isErrorWithCode } from '@react-native-google-signin/google-signin';
-useEffect(() => {
+
+export const signIn = async () => {
+  try {
+    // Configure Google Sign-In (if not done elsewhere in your app)
     GoogleSignin.configure({
       webClientId: '999901883304-kt5vpdvjvhf3t9i4aluiob4k1asqjavp.apps.googleusercontent.com', // Replace with your client ID
     });
-  }, []);
-const signIn = async () => {
-  try {
+
     // Checking Play Services (Android only)
     await GoogleSignin.hasPlayServices();
 
@@ -30,5 +29,7 @@ const signIn = async () => {
           console.error('Sign-In Error: ', error);
       }
     }
+  } finally {
+    console.log('Not working');
   }
 };
