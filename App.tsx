@@ -18,6 +18,28 @@ import {
 } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import Loginpage from './src/Authentication/Loginpage';
+import firebase from '@react-native-firebase/app';
+import auth from '@react-native-firebase/auth';
+
+
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyArquXGR4ucp6gBWuoYrvAUYqMRbRHaQ7Y',
+  authDomain: 'jaano-cbbd4.firebaseapp.com',
+  projectId: 'jaano-cbbd4',
+  storageBucket: 'jaano-cbbd4.firebasestorage.app',
+  messagingSenderId: '999901883304',
+  appId: '1:999901883304:android:896fa64cebcc5bfdbfcb9d',
+
+};
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+} else {
+  firebase.app(); 
+}
+
+
 
 
 const Stack = createStackNavigator();

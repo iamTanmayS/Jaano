@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "999901883304",
+    "project_id": "jaano-cbbd4",
+    "storage_bucket": "jaano-cbbd4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999901883304:android:896fa64cebcc5bfdbfcb9d",
+        "android_client_info": {
+          "package_name": "com.jaano"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999901883304-rpaern43k2jbclorsdfd4v188vmddb72.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jaano",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "999901883304-kt5vpdvjvhf3t9i4aluiob4k1asqjavp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArquXGR4ucp6gBWuoYrvAUYqMRbRHaQ7Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999901883304-kt5vpdvjvhf3t9i4aluiob4k1asqjavp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -7,6 +7,8 @@ import { Formik } from 'formik';
 import signupValidationSchema from './SignupValidationschema';
 import Maintheme from '../Assets/Theme/maintheme';
 import InputField from '../Components/InputField';
+import  auth  from '@react-native-firebase/auth';
+
 
 type SignUpPageNavigationProp = StackNavigationProp<RootStackParamList, 'Signuppage'>;
 
@@ -40,7 +42,20 @@ const Signuppage = () => {
 
       <Formik
         initialValues={{ email: '', name: '', password: '' }}
-        onSubmit={(values) => {console.log("pressed");console.log(values)}}
+        onSubmit={(values) => { try{
+          auth()
+          .createUserWithEmailAndPassword(values.email, values.password)
+          .then(() => {
+            console.log('User account created & signed in!');
+          
+          })}
+        catch(e){
+          console.log('Error: ', e);
+        }
+        finally{
+          console.log(values.email)
+        }}}
+          
        validationSchema={signupValidationSchema}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
@@ -91,7 +106,7 @@ const Signuppage = () => {
         )}
       </Formik>
 
-      <Button title="Login" onPress={() => navigation.navigate('Loginpage')} />
+      <Button title="Login" onPress={() => console.log('hell')} />
     </View>
   );
 };
