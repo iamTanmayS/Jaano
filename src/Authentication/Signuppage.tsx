@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button,Animated,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Button,Animated,TouchableOpacity,Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../Navigation/Routes';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -49,8 +49,11 @@ const Signuppage = () => {
           auth()
           .createUserWithEmailAndPassword(values.email, values.password)
           .then(() => {
-            console.log('User account created & signed in!');
-          
+            // Navigate to the 'Loginpage' after the operation is successful
+            navigation.navigate('Loginpage');
+            
+            // Show an alert with the user's name
+            Alert.alert('Login', ` ${values.name}`);
           })}
         catch(e){
           console.log('Error: ', e);

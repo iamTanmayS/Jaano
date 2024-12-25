@@ -1,51 +1,63 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button,Animated,TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, Button, Animated, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../Navigation/Routes';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Formik } from 'formik';
-import signupValidationSchema from './SignupValidationschema';
-import Maintheme from '../Assets/Theme/maintheme';
+import auth from '@react-native-firebase/auth';
 import InputField from '../Components/InputField';
-import  auth  from '@react-native-firebase/auth';
-import { signIn } from './loginWithGoogle';
-import Icon from 'react-native-vector-icons/FontAwesome6';
+import Maintheme from '../Assets/Theme/maintheme';
 import LoginValidationSchema from './LoginValidationschema';
+import ForgotPasswordValidationSchema from './ForgotPasswordValidationschema';
 
+type LoginpageProps = StackNavigationProp<any, 'Loginpage'>;
 
-
-type LoginpageProps = StackNavigationProp<RootStackParamList, 'Loginpage'>;
-interface handleLoginProps{
-  email: string,
-  password: string,
-}
 const Loginpage = () => {
-
+  const [email, setEmail] = useState('');
+  const [isForgotPassword, setForgotPassword] = useState(false);
   const navigation = useNavigation<LoginpageProps>();
-  const [scaleValue] = useState(new Animated.Value(1)); // Initial opacity for animation
-  const handleLogin = async (email : string,password: string) => {
+  const [scaleValue] = useState(new Animated.Value(1));
+
+  const handleLogin = async (email: string, password: string) => {
     try {
-      // Firebase Authentication Login
       await auth().signInWithEmailAndPassword(email, password);
       Alert.alert('Login Successful', `Welcome back, ${email}`);
-    } catch (error:any) {
+    } catch (error: any) {
       console.error(error);
       Alert.alert('Login Failed', error.message);
     }
   };
-  // Animation when button is pressed
+
+  const handleResetPassword = async (email: string) => {
+    if (!email) {
+      Alert.alert('Error', 'Please enter your email address.');
+      return;
+    }
+    try {
+      await auth().sendPasswordResetEmail(email);
+      Alert.alert('Password Reset', 'Check your email for the reset link.');
+      navigation.goBack(); // Go back to the login screen after successful email
+    } catch (error: any) {
+      console.error(error);
+      if (error.code === 'auth/user-not-found') {
+        Alert.alert('Error', 'No user found with that email address.');
+      } else {
+        Alert.alert('Error', error.message);
+      }
+    }
+  };
+
   const handleButtonPressIn = () => {
     Animated.spring(scaleValue, {
-      toValue: 0.95, // Slightly reduce the size for a subtle effect
-      friction: 4, // Control the bounce (a smoother effect)
-      tension: 40, // Control the speed of the animation
+      toValue: 0.95,
+      friction: 4,
+      tension: 40,
       useNativeDriver: true,
     }).start();
   };
 
   const handleButtonPressOut = () => {
     Animated.spring(scaleValue, {
-      toValue: 1, // Restore to original size
+      toValue: 1,
       friction: 4,
       tension: 40,
       useNativeDriver: true,
@@ -59,13 +71,17 @@ const Loginpage = () => {
 
       <Formik
         initialValues={{ email: '', password: '' }}
-        onSubmit={(values) => {handleLogin(values.email, values.password)}}
-          
-       validationSchema={LoginValidationSchema}
+        onSubmit={(values) => {
+          if (isForgotPassword) {
+            handleResetPassword(values.email);
+          } else {
+            handleLogin(values.email, values.password);
+          }
+        }}
+        validationSchema={isForgotPassword ? ForgotPasswordValidationSchema : LoginValidationSchema}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-          <View style={{marginTop:50}}>
-            
+          <View style={{ marginTop: 50 }}>
             {/* Email Input */}
             <InputField
               placeholder="Email address"
@@ -76,16 +92,20 @@ const Loginpage = () => {
             />
             {touched.email && errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
-            {/* Password Input */}
-            <InputField
-              placeholder="Password"
-              iconName="lock"
-              secureTextEntry
-              onChangeText={handleChange('password')}
-              onBlur={() => handleBlur('password')}
-              value={values.password}
-            />
-            {touched.password && errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
+            {/* Password Input (conditionally render based on isForgotPassword) */}
+            {!isForgotPassword && (
+              <InputField
+                placeholder="Password"
+                iconName="lock"
+                secureTextEntry
+                onChangeText={handleChange('password')}
+                onBlur={() => handleBlur('password')}
+                value={values.password}
+              />
+            )}
+            {!isForgotPassword && touched.password && errors.password && (
+              <Text style={styles.errorText}>{errors.password}</Text>
+            )}
 
             {/* Submit Button */}
             <Animated.View style={[styles.buttonContainer, { opacity: scaleValue }]}>
@@ -93,46 +113,44 @@ const Loginpage = () => {
                 style={styles.button}
                 onPressIn={handleButtonPressIn} // Press in (animation)
                 onPressOut={handleButtonPressOut} // Press out (reset animation)
-                onPress={handleSubmit as ()=> void}
+                onPress={()=>handleSubmit()}
               >
-                <Text style={styles.buttonText}>Login</Text>
+                <Text style={styles.buttonText}>{isForgotPassword ? 'Send Reset Link' : 'Login'}</Text>
               </TouchableOpacity>
             </Animated.View>
           </View>
         )}
       </Formik>
-      <Animated.View style={[styles.signupbuttonContainer, { opacity: scaleValue }]}>
-              <TouchableOpacity
-                style={styles.signupbutton}
-                onPressIn={handleButtonPressIn} // Press in (animation)
-                onPressOut={handleButtonPressOut} // Press out (reset animation)
-                onPress={() => signIn()}
-              >
 
-                <Text style={styles.signupbuttonText}>Forget Password?</Text>
-              </TouchableOpacity>
-            </Animated.View>
-            
-      
-            <Animated.View style={[styles.signupbuttonContainer, { opacity: scaleValue }]}>
-              <TouchableOpacity
-                style={styles.LoginTextcontainer}
-                onPressIn={handleButtonPressIn} // Press in (animation)
-                onPressOut={handleButtonPressOut} // Press out (reset animation)
-                onPress={() => navigation.navigate('Signuppage')}
-              > 
-              <Text style= {styles.LoginTextsimple}>Don't have a account?</Text>
-              <Text style={styles.LoginTextcolor}>Signup</Text>
-              </TouchableOpacity>
-            </Animated.View>
-            
-            
+      {/* Forgot Password Button */}
+      <Animated.View style={[styles.signupbuttonContainer, { opacity: scaleValue }]}>
+        <TouchableOpacity
+          style={styles.signupbutton}
+          onPressIn={handleButtonPressIn}
+          onPressOut={handleButtonPressOut}
+          onPress={() => setForgotPassword(!isForgotPassword)} // Toggle forgot password
+        >
+          <Text style={styles.signupbuttonText}>
+            {isForgotPassword ? 'Back to Login' : 'Forgot Password?'}
+          </Text>
+        </TouchableOpacity>
+      </Animated.View>
+
+      {/* Navigation to Signup */}
+      <Animated.View style={[styles.signupbuttonContainer, { opacity: scaleValue }]}>
+        <TouchableOpacity
+          style={styles.LoginTextcontainer}
+          onPressIn={handleButtonPressIn}
+          onPressOut={handleButtonPressOut}
+          onPress={() => navigation.navigate('Signuppage')}
+        >
+          <Text style={styles.LoginTextsimple}>Don't have an account?</Text>
+          <Text style={styles.LoginTextcolor}>Signup</Text>
+        </TouchableOpacity>
+      </Animated.View>
     </View>
   );
 };
-
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -165,14 +183,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   button: {
-    backgroundColor: 'rgb(246, 114, 61)', // Use the same color you want
+    backgroundColor: 'rgb(246, 114, 61)', 
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 30,
     width: '70%',
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 3, // Shadow for Android
+    elevation: 3,
     marginTop: 25,
   },
   buttonText: {
@@ -186,56 +204,48 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   signupbutton: {
-    flexDirection: 'row', // Align icon and text horizontally
-    backgroundColor: '#FFFFFF', // Google's white background
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
     width: '90%',
-    elevation: 3, // Shadow for Android
-    shadowColor: '#000', // Shadow for iOS
+    elevation: 3,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
     marginTop: 60,
-    borderColor:"rgb(246, 114, 61)",
-    borderWidth:2,
-  },
-  googleIcon: {
-    marginRight: 10, // Spacing between icon and text
+    borderColor: 'rgb(246, 114, 61)',
+    borderWidth: 2,
   },
   signupbuttonText: {
-    color: '#202124', // Google's standard text color
+    color: '#202124',
     fontSize: 16,
     fontWeight: 'bold',
   },
-  LoginTextcontainer:{
-      flexDirection: 'row', // Align icon and text horizontally
-    justifyContent: 'center', // Center the text
+  LoginTextcontainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     marginTop: 25,
-
     marginBottom: 10,
-    
   },
-  LoginTextcolor:{
-    color: 'rgb(246, 114, 61)', // Use the same color you want
+  LoginTextcolor: {
+    color: 'rgb(246, 114, 61)',
     marginTop: 10,
     fontWeight: 'bold',
     textDecorationLine: 'underline',
     fontSize: 18,
     marginLeft: 5,
-    
-
   },
-  LoginTextsimple:{
-    color: 'rgb(0, 0, 0)', // Use the same color you want
+  LoginTextsimple: {
+    color: 'rgb(0, 0, 0)',
     marginTop: 12,
     fontSize: 16,
     marginLeft: 10,
-    },
+  },
 });
 
-
-export default Loginpage
+export default Loginpage;
