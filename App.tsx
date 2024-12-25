@@ -20,7 +20,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import Loginpage from './src/Authentication/Loginpage';
 import firebase from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
-
+import HomeScreen from './src/Screens/HomeScreen';
 
 
 const firebaseConfig = {
@@ -54,6 +54,7 @@ function App(): React.JSX.Element {
     }} >
       <Stack.Screen name="Signuppage" component={Signuppage} />
       <Stack.Screen name="Loginpage" component={Loginpage} />
+      <Stack.Screen name= "HomeScreen" component={HomeScreen} />
     </Stack.Navigator>
     </NavigationContainer>
     </GestureHandlerRootView>

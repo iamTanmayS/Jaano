@@ -8,11 +8,11 @@ import InputField from '../Components/InputField';
 import Maintheme from '../Assets/Theme/maintheme';
 import LoginValidationSchema from './LoginValidationschema';
 import ForgotPasswordValidationSchema from './ForgotPasswordValidationschema';
-
-type LoginpageProps = StackNavigationProp<any, 'Loginpage'>;
+import HomeScreen from '../Screens/HomeScreen';
+import { RootStackParamList } from '../Navigation/Routes';
+type LoginpageProps = StackNavigationProp<RootStackParamList, 'Loginpage'>;
 
 const Loginpage = () => {
-  const [email, setEmail] = useState('');
   const [isForgotPassword, setForgotPassword] = useState(false);
   const navigation = useNavigation<LoginpageProps>();
   const [scaleValue] = useState(new Animated.Value(1));
@@ -20,7 +20,8 @@ const Loginpage = () => {
   const handleLogin = async (email: string, password: string) => {
     try {
       await auth().signInWithEmailAndPassword(email, password);
-      Alert.alert('Login Successful', `Welcome back, ${email}`);
+      navigation.navigate('HomeScreen')
+      
     } catch (error: any) {
       console.error(error);
       Alert.alert('Login Failed', error.message);
