@@ -9,6 +9,7 @@ import Maintheme from '../Assets/Theme/maintheme';
 import InputField from '../Components/InputField';
 import  auth  from '@react-native-firebase/auth';
 import { signIn } from './loginWithGoogle';
+import Icon from 'react-native-vector-icons/FontAwesome6';
 
 
 
@@ -61,7 +62,7 @@ const Signuppage = () => {
        validationSchema={signupValidationSchema}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-          <View>
+          <View style={{marginTop:50}}>
             {/* Name Input */}
             <InputField
               placeholder="Name"
@@ -107,8 +108,33 @@ const Signuppage = () => {
           </View>
         )}
       </Formik>
-
-      <Button title="Sign In With Google" onPress={() => signIn()} />
+      <Animated.View style={[styles.signupbuttonContainer, { opacity: scaleValue }]}>
+              <TouchableOpacity
+                style={styles.signupbutton}
+                onPressIn={handleButtonPressIn} // Press in (animation)
+                onPressOut={handleButtonPressOut} // Press out (reset animation)
+                onPress={() => signIn()}
+              >
+                <Icon name = "google" size = {20}  color = "#4285F4" style = {styles.googleIcon}>
+                  </Icon>
+                <Text style={styles.signupbuttonText}>Login In with Google</Text>
+              </TouchableOpacity>
+            </Animated.View>
+            
+      
+            <Animated.View style={[styles.signupbuttonContainer, { opacity: scaleValue }]}>
+              <TouchableOpacity
+                style={styles.LoginTextcontainer}
+                onPressIn={handleButtonPressIn} // Press in (animation)
+                onPressOut={handleButtonPressOut} // Press out (reset animation)
+                onPress={() => navigation.navigate('Loginpage')}
+              > 
+              <Text style= {styles.LoginTextsimple}>Already a user?</Text>
+              <Text style={styles.LoginTextcolor}>Login</Text>
+              </TouchableOpacity>
+            </Animated.View>
+            
+            
     </View>
   );
 };
@@ -121,10 +147,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: Maintheme.fonts.heading,
-    fontSize: Maintheme.fontSizes.huge,
+    fontSize: 50,
     textAlign: 'center',
     color: Maintheme.colors.headingcolor,
     marginTop: 50,
+ 
   },
   subheading: {
     fontFamily: Maintheme.fonts.subtitle,
@@ -152,13 +179,69 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 3, // Shadow for Android
-    marginTop: 15,
+    marginTop: 25,
   },
   buttonText: {
     color: '#FFF',
     fontSize: 18,
     fontWeight: 'bold',
   },
+  signupbuttonContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 20,
+  },
+  signupbutton: {
+    flexDirection: 'row', // Align icon and text horizontally
+    backgroundColor: '#FFFFFF', // Google's white background
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '90%',
+    elevation: 3, // Shadow for Android
+    shadowColor: '#000', // Shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    marginTop: 60,
+    borderColor:"rgb(246, 114, 61)",
+    borderWidth:2,
+  },
+  googleIcon: {
+    marginRight: 10, // Spacing between icon and text
+  },
+  signupbuttonText: {
+    color: '#202124', // Google's standard text color
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  LoginTextcontainer:{
+      flexDirection: 'row', // Align icon and text horizontally
+    justifyContent: 'center', // Center the text
+    marginTop: 25,
+
+    marginBottom: 10,
+    
+  },
+  LoginTextcolor:{
+    color: 'rgb(246, 114, 61)', // Use the same color you want
+    marginTop: 10,
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
+    fontSize: 18,
+    marginLeft: 5,
+    
+
+  },
+  LoginTextsimple:{
+    color: 'rgb(0, 0, 0)', // Use the same color you want
+    marginTop: 12,
+    fontSize: 16,
+    marginLeft: 10,
+    },
 });
+
 
 export default Signuppage;
